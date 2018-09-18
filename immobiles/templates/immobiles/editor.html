@@ -8,79 +8,179 @@
   .nav-wrapper {
     padding-left: 1rem;
   }
+  /* Always set the map height explicitly to define the size of the div
+  * element that contains the map. */
+  #map {
+    height: calc(100vh - 64px);
+    margin-top: 1rem;
+  }
 </style>
 {% endblock styles %}
 
 {% block sidenav-container %}
 {% endblock sidenav-container %}
 
-
-title
-gender
-kind
-address
-value
-contact
-details
 {% block content %}
 <div class="row">
   <div class="col s12 m4">
-    <form action="">
+    <br>
+    <form action=""
+          autocomplete="off"
+          method="POST">
       {% csrf_token %}
+      {% if form.longitude.errors or form.latitude.errors %}
+        <div class="row">
+          <div class="col s12 red-text bold">
+            Mova o marcador para a localização do imóvel dentro do mapa.
+          </div>
+        </div>
+      {% endif %}
+      {% if form.non_field_errors %}
+      <div class="row">
+        <div class="col s12">
+          {% for error in form.non_field_errors %}
+          {{ error }}
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
       <div class="row">
         <div class="input-field col s12">
-          <input placeholder="{{ form.title.label }}"
-                  id="{{ form.title.id_for_label }}"
-                  type="text"
-                  class="validate">
-          <label for="{{ form.title.id_for_label }}"></label>
+          <input id="{{ form.title.id_for_label }}"
+                 name="{{ form.title.html_name }}"
+                 {% if form.title.value %}value="{{ form.title.value }}"{% endif %}
+                 type="text"
+                 class="validate">
+          <label for="{{ form.title.id_for_label }}"
+                 {% if form.title.errors %}data-error="{{ form.title.errors.0}}" {% endif %}>
+            {{ form.title.label }}
+          </label>
         </div>
+
         <div class="input-field col s12">
-          <select>
-            <option value="" disabled selected>Choose your option</option>
-            <option value="1">Option 1</option>
-            <option value="2">Option 2</option>
-            <option value="3">Option 3</option>
+          <select name="{{ form.gender.html_name }}"
+                  name="{{ form.gender.html_name }}">
+            {% for value, gender in form.fields.gender.choices %}
+            <option value="{{ value }}"
+                    {% if form.gender.value == value %}selected{% endif %}>
+              {{ gender }}
+            </option>
+            {% endfor %}
           </select>
-          <label>Materialize Select</label>
+          <label {% if form.gender.errors %}data-error="{{ form.gender.errors.0}}"{% endif %}>
+            {{ form.gender.label }}
+          </label>
         </div>
+
         <div class="input-field col s12">
-          <select>
-            <option value="" disabled selected>Choose your option</option>
-            <option value="1">Option 1</option>
-            <option value="2">Option 2</option>
-            <option value="3">Option 3</option>
+          <select id="{{ form.kind.id_for_label }}"
+                  name="{{ form.kind.html_name }}">
+            {% for value, kind in form.fields.kind.choices %}
+            <option value="{{ value }}"
+                    {% if form.kind.value == value %}selected{% endif %}>
+              {{ kind }}
+            </option>
+            {% endfor %}
           </select>
-          <label>Materialize Select</label>
+          <label for="{{ form.kind.id_for_label }}"
+                 {% if form.kind.errors %}data-error="{{ form.kind.errors.0}}"{% endif %}>
+            {{ form.kind.label }}
+          </label>
         </div>
+
         <div class="input-field col s12">
-          <input placeholder="Placeholder"
-                  id="id_"
-                  type="text"
-                  class="validate">
-          <label for="id_"></label>
+          <input id="{{ form.address.id_for_label }}"
+                 name="{{ form.address.html_name }}"
+                 {% if form.address.value %}value="{{ form.address.value }}"{% endif %}
+                 type="text"
+                 class="validate">
+          <label for="{{ form.address.id_for_label }}"
+                 {% if form.address.errors %}data-error="{{ form.address.errors.0}}"{% endif %}>
+            {{ form.address.label }}
+          </label>
         </div>
+
         <div class="input-field col s12">
-          <input placeholder="Placeholder"
-                  id="id_"
-                  type="text"
-                  class="validate">
-          <label for="id_"></label>
+          <input id="{{ form.value.id_for_label }}"
+                 name="{{ form.value.html_name }}"
+                 {% if form.value.value %}value="{{ form.value.value }}"{% endif %}
+                 type="text"
+                 class="validate">
+          <label for="{{ form.value.id_for_label }}"
+                 {% if form.value.errors %}data-error="{{ form.value.errors.0}}"{% endif %}>
+            {{ form.value.label }}
+          </label>
         </div>
+
         <div class="input-field col s12">
-            <input placeholder="Placeholder"
-                    id="id_"
-                    type="text"
-                    class="validate">
-            <label for="id_"></label>
-          </div>
+          <textarea id="{{ form.contact.id_for_label }}"
+                    name="{{ form.contact.html_name }}"
+                    class="materialize-textarea">
+            {% if form.contact.value %}{{ form.contact.value }}{% endif %}
+          </textarea>
+          <label for="{{ form.contact.id_for_label }}"
+                 {% if form.contact.errors %}data-error="{{ form.contact.errors.0}}"{% endif %}>
+            {{ form.contact.label }}
+          </label>
+        </div>
+
+        <div class="input-field col s12">
+          <textarea id="{{ form.details.id_for_label }}"
+                    name="{{ form.details.html_name }}"
+                    class="materialize-textarea">
+            {% if form.details.value %}{{ form.details.value }}{% endif %}
+          </textarea>
+          <label for="{{ form.details.id_for_label }}"
+                 {% if form.details.errors %}data-error="{{ form.details.errors.0}}"{% endif %}>
+            {{ form.details.label }}
+          </label>
+        </div>
+        <div class="col-s12">
+          <button class="btn"
+                  type="submit">Salvar</button>
+        </div>
       </div>
+      <input id="latitude"
+             type="hidden"
+             name="latitude"
+             {% if form.latitude.value %}value="{{ form.latitude.value }}"{% endif %}>
+      <input id="longitude"
+             type="hidden"
+             name="longitude"
+             {% if form.longitude.value %}value="{{ form.longitude.value }}"{% endif %}>
     </form>
+  </div>
+  <div class="col s12 m8">
+    <div id="map"></div>
   </div>
 </div>
 {% endblock content %}
 
 {% block scripts %}
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDfTJcdAY1POyEs1-Wpwmklj9nE44i5THA&libraries=geometry"></script>
 <script>
+  var map;
+  var mapCenter = { lat: -22.231291451905935, lng: -54.82970655663214 };
+  {% if form.longitude.value and form.latitude.value %}
+    var markerPosition = { lat: {{ form.latitude.value }}, lng: {{ form.longitude.value }} };
+  {% else %}
+    var markerPosition = { lat: -22.231291451905935, lng: -54.82970655663214 };
+  {% endif %}
+  function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: mapCenter,
+      zoom: 13
+    });
+  }
+  initMap();
+  var marker = new google.maps.Marker({
+    position: markerPosition,
+    map: map,
+    draggable: true,
+  });
+  marker.addListener('dragend', function (a, b, c) {
+    document.getElementById('latitude').value = marker.position.lat();
+    document.getElementById('longitude').value = marker.position.lng();
+  })
 </script>
 {% endblock scripts %}

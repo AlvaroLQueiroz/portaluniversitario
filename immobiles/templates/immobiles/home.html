@@ -31,6 +31,7 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDfTJcdAY1POyEs1-Wpwmklj9nE44i5THA&libraries=geometry"></script>
 <script>
     var map;
+    var immobiles = {{ immobiles| safe}};
     function initMap() {
       map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: -22.231291451905935, lng: -54.82970655663214},
@@ -38,6 +39,25 @@
       });
     }
     initMap();
+    var infowindow = new google.maps.InfoWindow({
+    });
+    var marker
+    immobiles.map(function(immobile){
+      marker = new google.maps.Marker({
+        position: {lat: parseFloat(immobile.latitude), lng: parseFloat(immobile.longitude)},
+        map: map,
+        title: immobile.title,
+        ...immobile
+      });
+      marker.addListener('click', function(){
+        infowindow.setContent(`
+          <h1>${this.title}</h1>
+          Genero: ${this.gender}<br>
+          Tipo: ${this.kind}<br>
+        `)
+        infowindow.open(map, this)
+      })
+    })
   </script>
 {% endblock scripts %}
 

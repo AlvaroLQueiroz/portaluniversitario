@@ -25,6 +25,9 @@ class Immobile(models.Model):
     value = models.FloatField(verbose_name='Valor')
     contact = models.TextField(verbose_name='Contato')
     details = models.TextField(verbose_name='Detalhes')
-    latitude = models.CharField(max_length=200, verbose_name='')
-    longitude = models.CharField(max_length=200, verbose_name='')
+    latitude = models.CharField(max_length=200)
+    longitude = models.CharField(max_length=200)
     approved = models.BooleanField(default=False, verbose_name='Aprovado')
+
+    def __str__(self):
+        return self.title
