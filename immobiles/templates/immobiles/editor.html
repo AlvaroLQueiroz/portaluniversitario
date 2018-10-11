@@ -62,8 +62,8 @@
                   name="{{ form.gender.html_name }}">
             {% for value, gender in form.fields.gender.choices %}
             <option value="{{ value }}"
-                    {% if form.gender.value == value %}selected{% endif %}>
-              {{ gender }}
+                    {% if form.gender.value == value %}selected{% endif %}
+            >{{ gender }}
             </option>
             {% endfor %}
           </select>
@@ -77,8 +77,8 @@
                   name="{{ form.kind.html_name }}">
             {% for value, kind in form.fields.kind.choices %}
             <option value="{{ value }}"
-                    {% if form.kind.value == value %}selected{% endif %}>
-              {{ kind }}
+                    {% if form.kind.value == value %}selected{% endif %}
+            >{{ kind }}
             </option>
             {% endfor %}
           </select>
@@ -115,8 +115,8 @@
         <div class="input-field col s12">
           <textarea id="{{ form.contact.id_for_label }}"
                     name="{{ form.contact.html_name }}"
-                    class="materialize-textarea">
-            {% if form.contact.value %}{{ form.contact.value }}{% endif %}
+                    class="materialize-textarea"
+          >{% if form.contact.value %}{{ form.contact.value }}{% endif %}
           </textarea>
           <label for="{{ form.contact.id_for_label }}"
                  {% if form.contact.errors %}data-error="{{ form.contact.errors.0}}"{% endif %}>
@@ -127,8 +127,8 @@
         <div class="input-field col s12">
           <textarea id="{{ form.details.id_for_label }}"
                     name="{{ form.details.html_name }}"
-                    class="materialize-textarea">
-            {% if form.details.value %}{{ form.details.value }}{% endif %}
+                    class="materialize-textarea"
+          >{% if form.details.value %}{{ form.details.value }}{% endif %}
           </textarea>
           <label for="{{ form.details.id_for_label }}"
                  {% if form.details.errors %}data-error="{{ form.details.errors.0}}"{% endif %}>

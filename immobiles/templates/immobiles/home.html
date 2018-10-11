@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load list %}
 
 {% block styles %}
 <style>
@@ -13,10 +14,69 @@
       width: 100vw;
     }
   }
+  li.option {
+    margin-left: 20px;
+  }
+  #slider {
+    width: 90%;
+  }
 </style>
 {% endblock styles %}
 
 {% block sidenav %}
+<li class="black-text">
+  Gênero
+</li>
+{{ selected_genders}}
+{% for value, gender in genders %}
+<li class="option">
+  <input type="checkbox"
+         id="{{value}}_{{gender}}"
+         name="genders"
+         value="{{ value}}"
+         form="filters"
+         {{ value|in:selected_genders|yesno:"checked,"}}
+         />
+  <label for="{{value}}_{{gender}}">{{ gender }}</label>
+</li>
+{% endfor %}
+<li class="divider"
+    tabindex="-1"></li>
+<li class="black-text">
+  Tipo
+</li>
+{% for value, kind in kinds %}
+<li class="option">
+  <input type="checkbox"
+         id="{{value}}_{{kind}}"
+         name="kinds"
+         value="{{ value}}"
+         form="filters"
+         {{ value|in:selected_kinds|yesno:"checked,"}}/>
+  <label for="{{value}}_{{kind}}">{{ kind }}</label>
+</li>
+{% endfor %}
+</li>
+<li class="divider"
+    tabindex="-1"></li>
+<li class="black-text">
+  Preço
+</li>
+<li class="option">
+  <div id="slider"></div>
+</li>
+<li class="black-text">
+  De: R$<span class="initial-value">{{ initial_value }}</span>
+  Até: R$<span class="final-value">{{ final_value }}</span>
+  <input form="filters" type="hidden" name="initial_value" value="{{ initial_value|safe }}">
+  <input form="filters" type="hidden" name="final_value" value="{{ final_value|safe }}">
+</li>
+<li class="center-align">
+  <form id="filters" action="{% url 'home' %}" method="POST">
+    {% csrf_token %}
+    <button class="btn">Filtrar</button>
+  </form>
+</li>
 {% endblock sidenav %}
 
 {% block content %}
@@ -30,35 +90,68 @@
 {% block scripts %}
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDfTJcdAY1POyEs1-Wpwmklj9nE44i5THA&libraries=geometry"></script>
 <script>
-    var map;
-    var immobiles = {{ immobiles| safe}};
-    function initMap() {
-      map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: -22.231291451905935, lng: -54.82970655663214},
-        zoom: 13
-      });
-    }
-    initMap();
-    var infowindow = new google.maps.InfoWindow({
+  var map;
+  var immobiles = {{ immobiles| safe}};
+  function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: { lat: -22.231291451905935, lng: -54.82970655663214 },
+      zoom: 13
     });
-    var marker
-    immobiles.map(function(immobile){
-      marker = new google.maps.Marker({
-        position: {lat: parseFloat(immobile.latitude), lng: parseFloat(immobile.longitude)},
-        map: map,
-        title: immobile.title,
-        ...immobile
-      });
-      marker.addListener('click', function(){
-        infowindow.setContent(`
-          <h1>${this.title}</h1>
-          Genero: ${this.gender}<br>
-          Tipo: ${this.kind}<br>
+  }
+  initMap();
+  var infowindow = new google.maps.InfoWindow({
+  });
+  var marker
+  immobiles.map(function (immobile) {
+    marker = new google.maps.Marker({
+      position: { lat: parseFloat(immobile.latitude), lng: parseFloat(immobile.longitude) },
+      map: map,
+      title: immobile.title,
+      ...immobile
+    });
+    marker.addListener('click', function () {
+      infowindow.setContent(`
+          <h6>${this.title}</h6>
+          <p>
+            Genero: ${this.gender}<br>
+            Tipo: ${this.kind}<br>
+            Valor: R$ ${this.value}<br>
+          </p>
+          <p>
+            Detalhes: ${this.details}<br>
+          </p>
+          <p>
+            Contato: ${this.contact}<br>
+          </p>
         `)
-        infowindow.open(map, this)
-      })
+      infowindow.open(map, this)
     })
-  </script>
+  })
+  $(document).ready(function () {
+    var slider = document.getElementById('slider');
+    noUiSlider.create(slider, {
+      start: [{{ initial_value|safe }}, {{ final_value|safe }}],
+      connect: true,
+      step: 1,
+      orientation: 'horizontal', // 'horizontal' or 'vertical'
+      range: {
+        'min': 0,
+        'max': 5000
+      },
+    });
+    slider.noUiSlider.on('slide', function (e) {
+      $('.initial-value').text(e[0]);
+      $('.final-value').text(e[1]);
+      $('[name="initial_value"]').val(e[0]);
+      $('[name="final_value"]').val(e[1]);
+    });
+  })
+</script>
 {% endblock scripts %}
 
-<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d59091.70492076965!2d-54.82970655663214!3d-22.231291451905935!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9489a825ba544f99%3A0xd96ef82be62edddc!2sDourados%2C+State+of+Mato+Grosso+do+Sul!5e0!3m2!1sen!2sbr!4v1535640129446" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
+<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d59091.70492076965!2d-54.82970655663214!3d-22.231291451905935!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9489a825ba544f99%3A0xd96ef82be62edddc!2sDourados%2C+State+of+Mato+Grosso+do+Sul!5e0!3m2!1sen!2sbr!4v1535640129446"
+        width="600"
+        height="450"
+        frameborder="0"
+        style="border:0"
+        allowfullscreen></iframe>

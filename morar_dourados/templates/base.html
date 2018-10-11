@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html lang="pt-br">
 
@@ -12,6 +13,7 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <!-- Compiled and minified CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+  <link rel="stylesheet" href="{% static 'nouislider.min.css' %}">
   <style>
     header, main, footer {
       padding-left: 300px;
@@ -56,8 +58,8 @@
             {% block sidenav %}
             {% endblock sidenav %}
             <li class="divider" tabindex="-1"></li>
-            <li><a href="{% url 'create' %}">Cadastrar</a></li>
-            <li><a href="{% url 'logout' %}">Sair</a></li>
+            <li class="hide-on-large-only"><a href="{% url 'create' %}">Cadastrar</a></li>
+            <li class="hide-on-large-only"><a href="{% url 'logout' %}">Sair</a></li>
           </ul>
           {% endblock sidenav-container %}
         </div>
@@ -72,12 +74,10 @@
     {% endblock content %}
   </main>
 
-  <footer>
-    footti
-  </footer>
   <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+  <script src="{% static 'nouislider.min.js' %}"></script>
   <script>
 
     $(document).ready(function(){
