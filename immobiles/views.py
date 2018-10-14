@@ -1,12 +1,14 @@
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core import serializers
 from django.http import HttpResponse
+from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, TemplateView
 from django.views.generic.list import MultipleObjectMixin
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
-from django.core import serializers
-
 from immobiles.forms import ImmobileForm
-from immobiles.models import Immobile, GENDERS, KINDS
+from immobiles.models import GENDERS, KINDS, Immobile
 
 
 class HomeView(TemplateView):
@@ -72,3 +74,18 @@ class CreateImmobile(LoginRequiredMixin, CreateView):
         kwargs = super().get_form_kwargs()
         kwargs['user'] = self.request.user
         return kwargs
+
+
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect('home')
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/register.html', {'form': form})

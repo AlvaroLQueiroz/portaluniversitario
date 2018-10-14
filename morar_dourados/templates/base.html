@@ -45,9 +45,12 @@
         <div class="nav-wrapper">
           <a href="{% url 'home' %}" class="brand-logo">Logo</a>
           <ul class="right hide-on-med-and-down">
-            <li><a href="{% url 'create' %}">Cadastrar</a></li>
             {% if request.user.is_authenticated %}
+            <li><a href="{% url 'create' %}">Cadastrar Imóvel</a></li>
             <li><a href="{% url 'logout' %}">Sair</a></li>
+            {% else %}
+            <li><a href="{% url 'register' %}">Criar conta</a></li>
+            <li><a href="{% url 'login' %}">Entrar</a></li>
             {% endif %}
           </ul>
           {% block sidenav-container %}
@@ -58,8 +61,13 @@
             {% block sidenav %}
             {% endblock sidenav %}
             <li class="divider" tabindex="-1"></li>
-            <li class="hide-on-large-only"><a href="{% url 'create' %}">Cadastrar</a></li>
+            {% if request.user.is_authenticated %}
+            <li class="hide-on-large-only"><a href="{% url 'create' %}">Cadastrar Imóvel</a></li>
             <li class="hide-on-large-only"><a href="{% url 'logout' %}">Sair</a></li>
+            {% else %}
+            <li class="hide-on-large-only"><a href="{% url 'register' %}">Criar conta</a></li>
+            <li class="hide-on-large-only"><a href="{% url 'register' %}">Entrar</a></li>
+            {% endif %}
           </ul>
           {% endblock sidenav-container %}
         </div>

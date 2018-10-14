@@ -1,12 +1,23 @@
 {% extends 'base.html' %}
 
-{% block with-sidenav %}
-{% endblock with-sidenav %}
+{% block styles %}
+<style>
+  header, main, footer {
+    padding-left: 0px;
+  }
+  .nav-wrapper {
+    padding-left: 1rem;
+  }
+</style>
+{% endblock styles %}
 
+{% block sidenav-container %}
+{% endblock sidenav-container %}
 {% block content %}
 <div class="row">
-  <div class="col s12 m6 offset-m2">
+  <div class="col s12 m6 offset-m3">
     <div class="card-panel center-align">
+      <h4>Entrar</h4>
       <form method="post">
         {% csrf_token %}
         <div class="row">
@@ -22,7 +33,7 @@
           <div class="input-field col s12">
             <input id="{{ form.password.id_for_label }}"
                    name="{{ form.password.html_name }}"
-                   type="text"
+                   type="password"
                    class="validate">
             <label for="{{ form.password.id_for_label }}">
               Senha

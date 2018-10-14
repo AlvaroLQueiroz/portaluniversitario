@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+<style>
+  header, main, footer {
+    padding-left: 0px;
+  }
+  .nav-wrapper {
+    padding-left: 1rem;
+  }
+</style>
+{% endblock styles %}
+
+{% block sidenav-container %}
+{% endblock sidenav-container %}
+
+{% block content %}
+<div class="row">
+    <div class="col s12 m6 offset-m3">
+      <div class="card-panel center-align">
+        <h4>Criar conta</h4>
+          <form method="post">
+              {% csrf_token %}
+              <div class="input-field col s12">
+                <input id="{{ form.username.id_for_label }}"
+                        name="{{ form.username.html_name }}"
+                        {% if form.username.value %}value="{{ form.username.value }}"{% endif %}
+                        type="text"
+                        class="validate">
+                <label for="{{ form.username.id_for_label }}"
+                        {% if form.username.errors %}data-error="{{ form.username.errors.0}}" {% endif %}>
+                  {{ form.username.label }}
+                </label>
+              </div>
+              <div class="input-field col s12">
+                <input id="{{ form.password1.id_for_label }}"
+                        name="{{ form.password1.html_name }}"
+                        {% if form.password1.value %}value="{{ form.password1.value }}"{% endif %}
+                        type="password"
+                        class="validate">
+                <label for="{{ form.password1.id_for_label }}"
+                        {% if form.password1.errors %}data-error="{{ form.password1.errors.0}}" {% endif %}>
+                  {{ form.password1.label }}
+                </label>
+              </div>
+              <div class="input-field col s12">
+                  <input id="{{ form.password2.id_for_label }}"
+                          name="{{ form.password2.html_name }}"
+                          {% if form.password2.value %}value="{{ form.password2.value }}"{% endif %}
+                          type="password"
+                          class="validate">
+                  <label for="{{ form.password2.id_for_label }}"
+                          {% if form.password2.errors %}data-error="{{ form.password2.errors.0}}" {% endif %}>
+                    {{ form.password2.label }}
+                  </label>
+                </div>
+              <button type="submit" class="btn">Criar conta</button>
+            </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
